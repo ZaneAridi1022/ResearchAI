@@ -1,25 +1,24 @@
-from scholarly import scholarly
+from chatgpt import generate
+# import edge
+# import scholarscraper
 
-# Retrieve the author's data, fill-in, and print
-# Get an iterator for the author results
-search_query = scholarly.search_author('Steven A Cholewiak')
-# Retrieve the first result from the iterator
-first_author_result = next(search_query)
-scholarly.pprint(first_author_result)
+class EvaluteResponse(object):
+    def __init__(self, query: str, support: list, refuations: list):
+        self.query = query
+        self.support = support
+        self.refutations = refuations
 
-# Retrieve all the details for the author
-author = scholarly.fill(first_author_result )
-scholarly.pprint(author)
+class Study(object):
+    def __init__(self, argument: str, studyName: str, studySummary: str, sourceUrl: str, strengths: str, limitations: str):
+        self.argument = argument
+        self.studyName = studyName
+        self.studySummary = studySummary
+        self.sourceUrl = sourceUrl
+        self.strengths = strengths
+        self.limitations = limitations
 
-# Take a closer look at the first publication
-first_publication = author['publications'][0]
-first_publication_filled = scholarly.fill(first_publication)
-scholarly.pprint(first_publication_filled)
-
-# Print the titles of the author's publications
-publication_titles = [pub['bib']['title'] for pub in author['publications']]
-print(publication_titles)
-
-# Which papers cited that publication?
-citations = [citation['bib']['title'] for citation in scholarly.citedby(first_publication_filled)]
-print(citations)
+while True:
+    prmpt = input("Enter prompt")
+    if prmpt == "E":
+        break
+    print(generate(prmpt))
