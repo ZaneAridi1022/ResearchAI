@@ -1,8 +1,12 @@
+import os
 import openai
-from oack import AK
+from dotenv import load_dotenv
+
+load_dotenv()
+openai.api_key = os.getenv('OPENAI_API_KEY')
+
 
 def generate(prompt):
-    openai.api_key = AK
     # try:
     response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
