@@ -1,5 +1,7 @@
 import './App.css';
 import { useState, useEffect } from 'react';
+import Tree from 'react-d3-tree';
+import './custom-tree.css'
 
 function App() {
     const [value, setValue] = useState('');
@@ -24,7 +26,11 @@ function App() {
                 <input className="main-input" type="text" value={value} onChange={handleChange} />
                 <p>You typed: {value}</p>
             </div>
+            
+            <CreateTree />
+            
         </div>
+        
     );
 }
 
@@ -37,6 +43,44 @@ function OnEvaluate() {
         console.log(data)
     })
     );
+}
+
+function CreateTree() {
+  const orgChart = {
+  name: 'CEO',
+  children: [
+    {
+      name: 'Manager',
+      children: [
+        {
+          name: 'Foreman',
+          children: [
+            {
+              name: 'Worker',
+            },
+          ],
+        },
+        {
+          name: 'Foreman',
+          children: [
+            {
+              name: 'Worker',
+            },
+          ],
+        },
+      ],
+    },
+  ],
+};
+
+return (
+    <div id="treeWrapper" style={{ width: '100em', height: '100em', align: 'center'}}>
+      <Tree data={orgChart} 
+        rootNodeClassName="node__root"
+        branchNodeClassName="node__branch"
+        leafNodeClassName="node__leaf"/>
+    </div>
+);
 }
 
 export default App;
