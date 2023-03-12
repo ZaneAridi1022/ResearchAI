@@ -96,7 +96,7 @@ class Recommendation:
         async with semaphore:
             bot = Chatbot(cookiePath='backend/cookies.json')
             print(argument['argument'])
-            response = await bot.ask(prompt=f"Act as a researcher. Provide scholarly articles for this {argument['argument']}",
+            response = await bot.ask(prompt=f"Act as a researcher. Provide academic papers for this {argument['argument']}",
                                     conversation_style=ConversationStyle.creative)
             print(response)
             argument["urls"] = self.get_all_urls(response)
@@ -112,7 +112,7 @@ class Recommendation:
     async def recommend(self, topic):
         json_ = await self.get_json(topic)
 
-        semaphore = asyncio.Semaphore(10)
+        semaphore = asyncio.Semaphore(50)
 
         await self.process_arguments(json_["supporting_arguments"], semaphore)
         await self.process_arguments(json_["refuting_arguments"], semaphore)

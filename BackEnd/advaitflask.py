@@ -29,6 +29,9 @@ def recommend():
     prompt = request.args.get("prompt")
     if not prompt:
         abort(400, "Missing prompt")
+    if ".pdf" in prompt:
+        validate_url(prompt)
+        prompt = Recommendation().summarize_text(prompt)
     json_ = asyncio.run(Recommendation().recommend(prompt))
     return json_
 
