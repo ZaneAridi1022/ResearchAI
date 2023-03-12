@@ -1,3 +1,4 @@
+import json
 import os
 import re
 import io
@@ -17,7 +18,6 @@ class Recommendation:
     def __init__(self):
         self.co = cohere.Client(os.getenv('COHERE_API'))
         self.bot = Chatbot(cookiePath='backend/cookies.json')
-        self.semaphore = asyncio.Semaphore(5)
         
     @staticmethod
     def convert_pdf_to_string(url):
@@ -57,7 +57,6 @@ class Recommendation:
                 {"role": "user", "content": prompt},
             ]
         )
-        print(response["choices"][0]["message"]["content"])
         return self.text_to_json(response["choices"][0]["message"]["content"])
 
     @staticmethod
@@ -67,7 +66,11 @@ class Recommendation:
         while "  " in json_string:
             json_string = json_string.replace("  ", ' ')
         match = re.search("({.*})", json_string)
-        return eval(match.group(1))
+        try:
+            json_ = eval(match.group(1))
+        except:
+            json_ = json.loads(match.group(1))
+        return json_
 
     @staticmethod
     def get_all_urls(response):
@@ -78,26 +81,29 @@ class Recommendation:
         all_urls = list(set(all_urls))
         return all_urls
 
-
-    async def fetch_urls(self, semaphore, argument):
-        async with semaphore:
-            response = await self.bot.ask(prompt=f"Act as a researcher. Provide scholarly articles for this {argument['argument']}",
-                                    conversation_style=ConversationStyle.creative)
+    async def recommend(self, topic):
+        print(topic)
+        json_found = False
+        while not json_found:
+            try:
+                json_ = self.generate(topic)
+                json_found = True
+                print(json_)
+            except:
+                continue
+        for argument in json_["supporting_arguments"]:
+            bot = Chatbot(cookiePath='backend/cookies.json')
+            print(argument['argument'])
+            response = await bot.ask(prompt=f"Act as a researcher. Provide scholarly articles for this {argument['argument']}",
+                                          conversation_style=ConversationStyle.creative)
             print(response)
             argument["urls"] = self.get_all_urls(response)
-
-    async def recommend(self, topic):
-        json_ = self.generate(topic)
-        
-        # create a Semaphore with maximum value of 2
-        semaphore = asyncio.Semaphore(2)
-        
-        supporting_tasks = [asyncio.create_task(self.fetch_urls(semaphore, argument)) for argument in json_["supporting_arguments"]]
-        refuting_tasks = [asyncio.create_task(self.fetch_urls(semaphore, argument)) for argument in json_["refuting_arguments"]]
-        
-        # wait for all tasks to complete
-        await asyncio.gather(*supporting_tasks, *refuting_tasks)
-        
+        for argument in json_["refuting_arguments"]:
+            bot = Chatbot(cookiePath='backend/cookies.json')
+            print(argument['argument'])
+            response = await self.bot.ask(prompt=f"Act as a researcher. Provide scholarly articles for this {argument['argument']}",
+                                          conversation_style=ConversationStyle.creative)
+            print(response)
+            argument["urls"] = self.get_all_urls(response)
         await self.bot.close()
         return json_
-

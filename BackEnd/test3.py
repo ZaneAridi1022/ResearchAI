@@ -1,25 +1,22 @@
-from random import random
 import asyncio
- 
-# task coroutine
-async def task(semaphore, number):
-    # acquire the semaphore
+from EdgeGPT import Chatbot, ConversationStyle
+
+async def process_bot_request(semaphore):
     async with semaphore:
-        # generate a random value between 0 and 1
-        value = random()
-        # block for a moment
-        await asyncio.sleep(value)
-        # report a message
-        print(f'Task {number} got {value}')
- 
-# main coroutine
+        bot = Chatbot(cookiePath='backend/cookies.json')
+        print(await bot.ask(prompt="Hello world", conversation_style=ConversationStyle.creative))
+        await bot.close()
+
 async def main():
-    # create the shared semaphore
-    semaphore = asyncio.Semaphore(2)
-    # create and schedule tasks
-    tasks = [asyncio.create_task(task(semaphore, i)) for i in range(10)]
-    # wait for all tasks to complete
-    _ = await asyncio.wait(tasks)
- 
-# start the asyncio program
-asyncio.run(main())
+    semaphore = asyncio.Semaphore(100)
+
+    tasks = []
+
+    for i in range(10):
+        tasks.append(asyncio.ensure_future(process_bot_request(semaphore)))
+
+    await asyncio.gather(*tasks)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
