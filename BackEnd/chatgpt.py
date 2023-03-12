@@ -33,4 +33,4 @@ def argumentsInFavor(prompt):
     
     return response["choices"][0]["message"]["content"]
 
-print(argumentsInFavor("Trickle down economics is bad for the United States economy."))
+# print(argumentsInFavor("Trickle down economics is bad for the United States economy."))

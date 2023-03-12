@@ -1,13 +1,17 @@
 .node__root>circle {
-    fill: red;
-}
-
-.node__branch>circle {
     fill: yellow;
 }
 
-.node__leaf>circle {
+.red {
+    fill: red;
+}
+
+.green {
     fill: green;
-    /* Let's also make the radius of leaf nodes larger */
-    r: 40;
+
+} 
+
+.rd3t-label__title {
+    font-size: 5px;
+    transform: translateX(-20px);
 }
