@@ -48,7 +48,6 @@ class Recommendation:
     @staticmethod
     def get_all_urls(response):
         sources = response["item"]['messages'][1]['sourceAttributions']
-        print(sources)
         all_urls = []
         for source in sources:
             all_urls.append(source["seeMoreUrl"])
