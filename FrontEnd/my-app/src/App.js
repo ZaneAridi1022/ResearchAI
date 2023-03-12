@@ -1,5 +1,5 @@
 import './App.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 function App() {
     const [value, setValue] = useState('');
@@ -16,7 +16,7 @@ function App() {
                 <h1 style={{ margin: '0' }}>Research AI</h1>
             </header>
             <div className="outerBox">
-                <button className="btn-1">Evaluate</button>
+                <button className="btn-1" onClick={OnEvaluate}>Evaluate</button>
                 <button className="btn-1">Criticize</button>
                 <button className="btn-1">Support</button>
             </div>
@@ -25,6 +25,17 @@ function App() {
                 <p>You typed: {value}</p>
             </div>
         </div>
+    );
+}
+
+function OnEvaluate() {
+
+    const prompt = "hello";
+    fetch("http://localhost:5000/evaluate?prompt="+prompt)
+    .then(response => response.json()
+    .then(data => {
+        console.log(data)
+    })
     );
 }
 

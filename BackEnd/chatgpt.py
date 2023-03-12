@@ -1,13 +1,8 @@
-import os
 import openai
-from dotenv import load_dotenv
-
-load_dotenv()
-openai.api_key = os.getenv('OPENAI_API_KEY')
-
+from oack import AK
 
 def generate(prompt):
-    # try:
+    openai.api_key = AK
     response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
@@ -15,5 +10,3 @@ def generate(prompt):
             ]
         )
     return response["choices"][0]["message"]["content"]
-# except:
-    print("Rate limit exceeded. Please try again later.")
