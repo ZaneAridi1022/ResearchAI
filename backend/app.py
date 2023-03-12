@@ -1,6 +1,6 @@
 import asyncio
 import streamlit as st
-from edge import action
+from recommend import action
 from summary import summarize_text
 import uuid
 
