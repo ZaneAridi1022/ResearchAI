@@ -4,16 +4,17 @@ import re
 import io
 import asyncio
 import requests
+import PyPDF2
 import openai
 import cohere
 from EdgeGPT import Chatbot, ConversationStyle
 
-openai.api_key = os.getenv('OPENAI_API_KEY')
+openai.api_key = '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'
 
 
 class Recommendation:
     def __init__(self):
-        self.co = cohere.Client(os.getenv('COHERE_API'))
+        self.co = cohere.Client("6UBWbACRouDCdaphrUMZoFizjQ9kl3gDGeNQqXxo")
         self.bot = Chatbot(cookiePath='backend/cookies.json')
         
     @staticmethod
