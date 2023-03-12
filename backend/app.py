@@ -7,15 +7,18 @@ import graphviz
 
 def show_articles(urls):
     for url in urls:
-        st.write(url)
-        if "pdf" in url:
-            if st.button("Rabbit Hole!", key=uuid.uuid4()):
-                st.session_state.rabbit_hole = True
-                st.subheader("Current Article")
-                main(url)
+        if url != st.session_state.url:
+            st.write(url)
+            if "pdf" in url:
+                if st.button("Rabbit Hole!", key=uuid.uuid4()):
+                    st.session_state.rabbit_hole = True
+                    st.session_state.url = url
+                    print("sesh state url", st.session_state.url)
+                    main(url)
 
 def main(url):
     if url:
+        print("actual url", st.session_state.url)
         summary = Recommendation().summarize_text(url)
         st.subheader("Current Article")
         st.write(url)
@@ -55,10 +58,14 @@ def main(url):
         st.graphviz_chart(st.session_state.graph, use_container_width=True)
 
 if __name__ == "__main__":
-    if not st.session_state.get("rabbit_hole"):
+    if  "rabbit_hole" not in st.session_state:
         st.session_state.rabbit_hole = False
     st.session_state.graph = graphviz.Digraph()
     st.header("Rabbit Hole")
-    url_input = st.text_input("Enter a research article:")
     if not st.session_state.rabbit_hole:
-        main(url_input)
+        url_input = st.text_input("Enter a research article:")
+        if st.button("Get Arguments"):
+            st.session_state.url = url_input
+        url = st.session_state.get("url")
+        if url:
+            main(url)   
