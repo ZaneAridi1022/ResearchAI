@@ -25,6 +25,7 @@ function App() {
                 <p>You typed: {value}</p>
             </div>
         </div>
+
     );
 }
 
