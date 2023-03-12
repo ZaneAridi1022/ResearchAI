@@ -1,34 +1,113 @@
-import "./App.css";
-import { useState } from "react";
+import React from "react";
 
-function App() {
-  const [value, setValue] = useState("");
+function generateTree() {
+  var jsonResponse = {
+    refuting_arguments: [
+      {
+        argument:
+          "The practice of tax cuts for the wealthy and businesses has been implemented in the past with little to no evidence of trickle down effects. Tax cuts in the 1980s and 2000s resulted in little economic growth or job creation.",
+        tagline: "Lack of evidence in practice",
+        urls: [
+          "https://www.thebalancemoney.com/trickle-down-economics-theory-effect-does-it-work-3305572",
+          "https://taxfoundation.org/reviewing-recent-evidence-effect-taxes-economic-growth/",
+          "https://www.salon.com/2020/12/27/50-year-study-of-tax-cuts-on-wealthy-shows-they-always-fail-to-trickle-down/",
+          "https://www.brookings.edu/research/effects-of-income-tax-changes-on-economic-growth/",
+          "https://knowledge.wharton.upenn.edu/article/trickle-economics-flood-drip/",
+          "https://www.bloomberg.com/news/articles/2020-12-21/trickle-down-economics-fails-a-sophisticated-statistical-test",
+        ],
+      },
+      {
+        argument:
+          "Trickle down economics benefits only the wealthy, as the tax cut disproportionately benefits them. The working class receives none of the benefits that trickle down claims to provide.",
+        tagline: "Benefits only the wealthy",
+        urls: [
+          "https://www.lse.ac.uk/research/research-for-the-world/economics/tax-cuts-for-the-wealthy-only-benefit-the-rich-debunking-trickle-down-economics",
+          "https://www.thebalancemoney.com/trickle-down-economics-theory-effect-does-it-work-3305572",
+          "https://thehill.com/changing-america/respect/poverty/530731-huge-new-study-shows-trickle-down-economics-makes-inequality/",
+          "https://www.investopedia.com/terms/t/trickledowntheory.asp",
+        ],
+      },
+      {
+        argument:
+          "Trickle down economics leads to increased income inequality since the wealthy will receive a large share of the tax breaks while the working class receives none of the benefits. This disparity leads to a further divide between the rich and the poor.",
+        tagline: "Increased income inequality",
+        urls: [
+          "https://www.thebalancemoney.com/trickle-down-economics-theory-effect-does-it-work-3305572",
+          "https://www.salon.com/2020/12/27/50-year-study-of-tax-cuts-on-wealthy-shows-they-always-fail-to-trickle-down/",
+          "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0154196",
+          "https://onlinelibrary.wiley.com/doi/abs/10.1111/dpr.12214",
+          "https://thehill.com/changing-america/respect/poverty/530731-huge-new-study-shows-trickle-down-economics-makes-inequality/",
+          "https://time.com/5888024/50-trillion-income-inequality-america/",
+        ],
+      },
+    ],
+    supporting_arguments: [
+      {
+        argument:
+          "Trickle down economics argues that by reducing taxes on the wealthy and businesses, they will have more disposable income which they will use to invest in their businesses, create jobs, and grow the economy. This increased economic activity will then benefit everyone in society.",
+        tagline: "Incentive to invest and grow the economy",
+        urls: [
+          "https://www.thebalancemoney.com/trickle-down-economics-theory-effect-does-it-work-3305572",
+          "https://www.economicsonline.co.uk/definitions/trickle-down-economics-why-it-only-works-in-theory.html/",
+          "https://knowledge.wharton.upenn.edu/article/trickle-economics-flood-drip/",
+          "https://en.wikipedia.org/wiki/Trickle-down_economics",
+          "https://www.aeaweb.org/articles?id=10.1257/mac.20160220",
+          "https://academic.oup.com/restud/article-abstract/64/2/151/1580865",
+        ],
+      },
+      {
+        argument:
+          "Lower taxes on the wealthy and businesses create an incentive for entrepreneurship. Entrepreneurs can take advantage of the tax break and use the saved money to fund their business ventures, creating new jobs and opportunities.",
+        tagline: "Encourages entrepreneurship",
+        urls: [
+          "https://link.springer.com/article/10.1007/s00712-013-0375-z",
+          "https://www.iedm.org/84452-entrepreneurship-and-fiscal-policy-how-taxes-affect-entrepreneurial-activity/",
+          "https://www.cato.org/commentary/capital-gains-tax-threat",
+          "https://www.brookings.edu/research/the-relationship-between-taxes-and-growth-at-the-state-level-new-evidence/",
+          "https://www.thecgo.org/research/how-do-taxes-affect-entrepreneurship-innovation-and-productivity/",
+        ],
+      },
+      {
+        argument:
+          "Trickle down economists argue that lower tax rates lead to increased economic growth since businesses and individuals have more money to invest in the economy, which creates more jobs and results in higher economic growth.",
+        tagline: "Lower tax rates lead to increased economic growth",
+        urls: [
+          "https://www.brookings.edu/wp-content/uploads/2016/06/09_Effects_Income_Tax_Changes_Economic_Growth_Gale_Samwick.pdf",
+          "https://www.brookings.edu/research/effects-of-income-tax-changes-on-economic-growth/",
+          "https://taxfoundation.org/what-evidence-taxes-and-growth",
+          "https://taxfoundation.org/reviewing-recent-evidence-effect-taxes-economic-growth/",
+        ],
+      },
+    ],
+    topic: "Trickle Down Economics",
+  };
 
-  const handleChange = (event) => {
-    setValue(event.target.value);
+  const renderNode = (name, children) => {
+    return (
+      <div key={name}>
+        <h3>{name}</h3>
+        {children && (
+          <div style={{ marginLeft: "20px" }}>
+            {children.map((child) => (
+              <div key={child.tagline}>
+                <h4>{child.tagline}</h4>
+                <p>{child.argument}</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
   };
 
   return (
-    <div className="App">
-      <header
-        style={{ backgroundColor: "#1E90FF", color: "white", padding: "20px" }}
-      >
-        <h1 style={{ margin: "0" }}>Research AI</h1>
-      </header>
-      <div className="outerBox">
-        <button className="btn-1">Evaluate</button>
-      </div>
-      <div className="main-input-div">
-        <input
-          className="main-input"
-          type="text"
-          value={value}
-          onChange={handleChange}
-        />
-        <p>You typed: {value}</p>
-      </div>
+    <div>
+      {renderNode(topic, [
+        { name: "Supporting Arguments", children: supporting_arguments },
+        { name: "Refuting Arguments", children: refuting_arguments },
+      ])}
     </div>
   );
 }
 
-export default App;
+export default generateTree;

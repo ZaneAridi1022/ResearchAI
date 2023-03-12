@@ -49,7 +49,23 @@ class Recommendation:
         return urls
 
     def generate(self, topic):
-        json_format = "{'topic':topic, 'supporting_arguments':[{'tagline':tagline, 'argument':argument}], 'refuting_arguments':[{'tagline':tagline, 'argument':argument}]}"
+        json_format = """
+        {
+            "topic": "topic",
+            "supporting_arguments": [
+                {
+                "tagline": "tagline",
+                "argument": "argument"
+                }
+            ],
+            "refuting_arguments": [
+                {
+                "tagline": "tagline",
+                "argument": "argument"
+                }
+            ]
+        }
+        """
         prompt = f"Please provide supporting and refuting arguments for {topic} in one dictionary JSON format like so {json_format}.  Please include short taglines for each argument that succinctly capture its main point."
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
@@ -96,7 +112,7 @@ class Recommendation:
         async with semaphore:
             bot = Chatbot(cookiePath='backend/cookies.json')
             print(argument['argument'])
-            response = await bot.ask(prompt=f"Act as a researcher. Provide academic papers for this {argument['argument']}",
+            response = await bot.ask(prompt=f"Act as a researcher. Provide academic papers in PDF format for this {argument['argument']}",
                                     conversation_style=ConversationStyle.creative)
             print(response)
             argument["urls"] = self.get_all_urls(response)
@@ -116,7 +132,7 @@ class Recommendation:
 
         await self.process_arguments(json_["supporting_arguments"], semaphore)
         await self.process_arguments(json_["refuting_arguments"], semaphore)
-
+        print(json_)
         return json_
 
     
