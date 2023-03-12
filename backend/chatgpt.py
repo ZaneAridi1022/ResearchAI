@@ -15,5 +15,5 @@ def generate(prompt):
             ]
         )
     return response["choices"][0]["message"]["content"]
-# except:
-    print("Rate limit exceeded. Please try again later.")
+
+
