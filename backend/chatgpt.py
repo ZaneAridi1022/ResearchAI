@@ -16,4 +16,8 @@ def generate(prompt):
         )
     return response["choices"][0]["message"]["content"]
 
+topic = "trickle down economics"
+json_format = "{'topic':topic, 'supporting_arguments':[], 'refuting_arguments':[]}"
+print(generate(f"Please provide supporting and refuting arguments for {topic} in JSON format like so {json_format}.  Please include short taglines for each argument that succinctly capture its main point."))
+
 

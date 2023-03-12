@@ -1,16 +1,15 @@
-import asyncio
 import time
+import asyncio
+from recommend import Recommendation
 
-from backend.advaitflask import Recommendation
-
-prompt = "machine learning"
-recommendation = Recommendation()
-
+# create an instance of the Recommendation class
+# call the recommend function and measure the time taken
 start_time = time.time()
-urls = asyncio.run(recommendation.recommend(prompt))
+topic = "climate change"
+result = asyncio.run(Recommendation().recommend(topic))
 end_time = time.time()
+time_taken = end_time - start_time
 
-duration = end_time - start_time
-print(f"Request took {duration:.2f} seconds.")
-
-print(urls)
+# print the result and the time taken
+print("Result:", result)
+print("Time taken:", time_taken, "seconds")
