@@ -81,8 +81,7 @@ class Recommendation:
         all_urls = list(set(all_urls))
         return all_urls
 
-    async def recommend(self, topic):
-        print(topic)
+    async def get_json(self, topic):
         json_found = False
         while not json_found:
             try:
@@ -91,19 +90,34 @@ class Recommendation:
                 print(json_)
             except:
                 continue
-        for argument in json_["supporting_arguments"]:
+        return json_
+
+    async def process_argument(self, argument, semaphore):
+        async with semaphore:
             bot = Chatbot(cookiePath='backend/cookies.json')
             print(argument['argument'])
             response = await bot.ask(prompt=f"Act as a researcher. Provide scholarly articles for this {argument['argument']}",
-                                          conversation_style=ConversationStyle.creative)
+                                    conversation_style=ConversationStyle.creative)
             print(response)
             argument["urls"] = self.get_all_urls(response)
-        for argument in json_["refuting_arguments"]:
-            bot = Chatbot(cookiePath='backend/cookies.json')
-            print(argument['argument'])
-            response = await self.bot.ask(prompt=f"Act as a researcher. Provide scholarly articles for this {argument['argument']}",
-                                          conversation_style=ConversationStyle.creative)
-            print(response)
-            argument["urls"] = self.get_all_urls(response)
-        await self.bot.close()
+            await bot.close()
+
+    async def process_arguments(self, arguments, semaphore):
+        tasks = []
+        for argument in arguments:
+            task = asyncio.ensure_future(self.process_argument(argument, semaphore))
+            tasks.append(task)
+        await asyncio.gather(*tasks)
+
+    async def recommend(self, topic):
+        json_ = await self.get_json(topic)
+
+        semaphore = asyncio.Semaphore(10)
+
+        await self.process_arguments(json_["supporting_arguments"], semaphore)
+        await self.process_arguments(json_["refuting_arguments"], semaphore)
+
         return json_
+
+    
+

@@ -8,11 +8,11 @@ async def process_bot_request(semaphore):
         await bot.close()
 
 async def main():
-    semaphore = asyncio.Semaphore(100)
+    semaphore = asyncio.Semaphore(10)
 
     tasks = []
 
-    for i in range(10):
+    for i in range(3):
         tasks.append(asyncio.ensure_future(process_bot_request(semaphore)))
 
     await asyncio.gather(*tasks)
